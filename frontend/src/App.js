@@ -249,7 +249,7 @@ function App() {
       {
         title: "Library Resources",
         description: "Access online journals, books and research materials",
-        link: "https://library.udom.ac.tz",
+        link: "https://catalog.udom.ac.tz",
         icon: FiBookOpen
       },
       {
@@ -261,7 +261,7 @@ function App() {
       {
         title: "Exam Results",
         description: "Check your examination results and transcripts",
-        link: "https://results.udom.ac.tz",
+        link: "https://sr2.udom.ac.tz/site/login?",
         icon: FiBarChart2
       },
       {
