@@ -6,10 +6,10 @@
 ![technologies](https://skillicons.dev/icons?i=react,js,html,css,tailwind&perline=10)
 
 **Backend**  
-![technologies](https://skillicons.dev/icons?i=python,fastapi,sqlite&perline=10)
+![technologies](https://skillicons.dev/icons?i=python,fastapi&perline=10)
 
 **Tools & Platforms**  
-![technologies](https://skillicons.dev/icons?i=github,vscode,firebase&perline=10)
+![technologies](https://skillicons.dev/icons?i=github,vscode&perline=10)
 
 ## Setup
 
