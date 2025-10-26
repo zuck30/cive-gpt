@@ -289,6 +289,13 @@ function App() {
         description: "Online application system (OAS)",
         link: "https://application.udom.ac.tz/",
         icon: FiPenTool
+      },
+
+           {
+        title: "Blog & News",
+        description: " Latest university news and articles",
+        link: "https://portal.udom.ac.tz/blog/index",
+        icon: FiBlog
       }
     ],
 
