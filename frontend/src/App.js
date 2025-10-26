@@ -267,7 +267,7 @@ function App() {
       {
         title: "Academic Calendar",
         description: "Important dates and academic events",
-        link: "https://www.udom.ac.tz/academic-calendar",
+        link: "https://www.udom.ac.tz",
         icon: FiCalendar
       },
       {
