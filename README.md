@@ -8,10 +8,6 @@ CiveGpt is a web/mobile app for CIVE and UDOM students, delivering life-saving t
 
 ![React](https://img.shields.io/badge/React-18.2.0-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.68.0-green) ![Grok API](https://img.shields.io/badge/Grok-API-brightgreen)
 
-<a href="https://github.com/zuck30"> 
-  <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGpzbGM1ZXh4Y2VteWYza3NhbXoxamF0eWRnNnM4bHR0b3hiOWZmdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hSLA7QcIpsWcGeGqRi/giphy.gif" width="40%" align="right" style="border-radius:10px; animation: float 6s ease-in-out infinite;" alt="Coding GIF">
-</a>
-
 ## Features
 
 - **Campus Map**: Real-time navigation to lecture halls, clinics, and more with safe routes and offline mode.
