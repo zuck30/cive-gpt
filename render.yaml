@@ -2,13 +2,10 @@ services:
   - type: web
     name: civegpt-backend
     env: python
-    pythonVersion: '3.11'
     region: oregon
     plan: free
     build: pip install -r backend/requirements.txt
     start: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11
       - key: GROQ_API_KEY
         sync: false
