@@ -6,7 +6,8 @@ import {
   FiMenu, FiHeart, FiAlertCircle, FiBook, FiBookmark, FiAward, FiMap, FiHome, FiBriefcase, FiUsers, FiCompass, FiMapPin, FiDownload,
   FiBookOpen, FiCalendar, FiBarChart2, FiLayers, FiTarget, FiTool,
   FiPenTool,
-  FiDatabase
+  FiDatabase,
+  FiPaperclip
 } from 'react-icons/fi';
 import { 
   MdEmergency,
@@ -304,10 +305,23 @@ function App() {
         description: "Open Access repository storing books, book chapters, conference proceedings, doctoral theses, journal articles, master's dissertations, policies, and reports from University of Dodoma students and staff.",
         link: "https://repository.udom.ac.tz/home",
         icon: FiDatabase
+      },
+
+    {
+        title: "e-Mrejesho System",
+        description: "Mfumo wa kuripoti na kufuatilia malalamiko mbalimbali yanayohusu utoaji wa huduma za umma katika taasisi za umma na binafsi nchini Tanzania.",
+        link: " https://emrejesho.gov.go.tz",
+        icon: FiPaperclip
       }
+
     ],
 
     
+
+
+
+
+   
 
     importantDates: [
       { event: "University Opening", date: "November 8-11, 2025" }
