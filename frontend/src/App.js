@@ -91,8 +91,8 @@ function App() {
       address: "CIVE Laboratories Building",
       type: "Academic",
       description: "Specialized computer laboratories and research facilities",
-      facilities: ["Programming Labs", "Networking Lab", "Research Lab", "Project Rooms", "Server Room"],
-      hours: "7:00 AM - 10:00 PM",
+      facilities: ["Programming Labs", "Networking Lab", "Research Lab", "Server Room"],
+      hours: "9:00 AM - 10:00 PM",
       contact: "labs@cive.udom.ac.tz"
     },
     cafeteria: {
@@ -101,8 +101,8 @@ function App() {
       address: "Student Cafeteria and Social Area",
       type: "Amenity",
       description: "Food court and student social gathering space",
-      facilities: ["Food Counters", "Dining Area", "Outdoor Seating", "Snack Bar", "WiFi Zone"],
-      hours: "6:30 AM - 8:00 PM",
+      facilities: ["Food Counters", "Dining Area", "Outdoor Seating"],
+      hours: "8:00 AM - 9:00 PM",
       contact: "udom.ac.tz"
     },
     auditorium: {
@@ -115,16 +115,7 @@ function App() {
       hours: "As Scheduled",
       contact: "udom.ac.tz"
     },
-    workshop: {
-      name: "Technical Workshop",
-      location: { lat: -6.2176955, lng: 35.8090612 },
-      address: "CIVE Technical and Practical Labs",
-      type: "Academic",
-      description: "Hands on technical training and workshop area",
-      facilities: ["Hardware Lab", "Repair Station", "Prototyping Area", "Tools"],
-      hours: "8:00 AM - 6:00 PM",
-      contact: "udom.ac.tz"
-    },
+
     researchCenter: {
       name: "Research Center",
       location: { lat: -6.2177955, lng: 35.8097612 },
@@ -574,7 +565,7 @@ function App() {
         </div>
       </div>
 
-      {/* FIXED: Twitter-like Chat Container with independent scrolling */}
+      {/* Chat Container with independent scrolling */}
       <div 
         ref={chatContainerRef}
         className="chat-messages flex-1 mb-4 overflow-y-auto custom-scrollbar"
@@ -621,7 +612,7 @@ function App() {
                 key={msg.id}
                 className={`message-group ${msg.type === 'user' ? 'user-message' : 'bot-message'}`}
               >
-                {/* Twitter-like Message Card */}
+                {/* Message Card */}
                 <div className={`message-card rounded-2xl border ${
                   msg.type === 'user' 
                     ? 'bg-orange-500 border-orange-600 ml-auto' 
