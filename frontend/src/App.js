@@ -4,7 +4,8 @@ import {
   FiMessageSquare, FiSearch, FiStar, FiShare2, FiRotateCcw,
   FiAlertTriangle, FiPlus, FiChevronRight, FiChevronLeft, FiMic, FiSpeaker, FiUpload, FiFile, FiClock, FiThumbsUp, FiRotateCw,
   FiMenu, FiHeart, FiAlertCircle, FiBook, FiBookmark, FiAward, FiMap, FiHome, FiBriefcase, FiUsers, FiCompass, FiMapPin, FiDownload,
-  FiBookOpen, FiCalendar, FiBarChart2, FiLayers, FiTarget, FiTool
+  FiBookOpen, FiCalendar, FiBarChart2, FiLayers, FiTarget, FiTool,
+  FiPenTool
 } from 'react-icons/fi';
 import { 
   MdEmergency,
@@ -281,8 +282,18 @@ function App() {
         description: "University research publications and projects",
         link: "https://udom.ac.tz",
         icon: FiTarget
+      },
+
+        {
+        title: "Online Portal Application ",
+        description: "Online application system (OAS)",
+        link: "https://application.udom.ac.tz/",
+        icon: FiPenTool
       }
     ],
+
+    
+
     importantDates: [
       { event: "University Opening", date: "November 8-11, 2025" }
     ]
