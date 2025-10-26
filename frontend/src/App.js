@@ -53,14 +53,14 @@ function App() {
   // CIVE Buildings Data from Google Maps coordinates
   const civeBuildings = {
     library: {
-      name: "CIVE Library",
+      name: " Udom library catalog",
       location: { lat: -6.2172955, lng: 35.8095612 },
       address: "College of Informatics and Virtual Education, UDOM",
       type: "Academic",
       description: "Main library with study spaces, computers, and research materials",
       facilities: ["Study Areas", "Computers", "Research Materials", "Quiet Zones"],
       hours: "8:00 AM - 10:00 PM",
-      contact: "udom.ac.tz"
+      contact: "catalog.udom.ac.tz"
     },
     academicBlock: {
       name: "Academic Block",
