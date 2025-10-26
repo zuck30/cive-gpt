@@ -333,7 +333,7 @@ function App() {
     setQuery('');
 
     try {
-      const response = await fetch('http://localhost:8000/chat', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
