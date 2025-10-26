@@ -60,3 +60,7 @@ Open a GitHub issue or email [mwalyangashadrack@gmail.com](mailto:mwalyangashadr
 
 ## License
 MIT License. See [LICENSE.md](LICENSE.md).
+
+<h3>Console </h3>
+
+- https://console.groq.com/keys
