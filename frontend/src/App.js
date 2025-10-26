@@ -315,14 +315,6 @@ function App() {
       }
 
     ],
-
-    
-
-
-
-
-   
-
     importantDates: [
       { event: "University Opening", date: "November 8-11, 2025" }
     ]
