@@ -271,15 +271,15 @@ function App() {
         icon: FiCalendar
       },
       {
-        title: "Online Learning",
+        title: "E Classroom",
         description: "Access e-learning platforms and resources",
-        link: "https://elearning.udom.ac.tz",
+        link: "https://eclassroom.udom.ac.tz/",
         icon: FiLayers
       },
       {
         title: "Research Portal",
         description: "University research publications and projects",
-        link: "https://research.udom.ac.tz",
+        link: "https://udom.ac.tz",
         icon: FiTarget
       }
     ],
