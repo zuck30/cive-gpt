@@ -10,11 +10,11 @@ CiveGpt is a web/mobile app for CIVE and UDOM students, delivering life-saving t
 
 ## Features
 
-- **Campus Map**: Real-time navigation to lecture halls, clinics, and more with safe routes and offline mode.
-- **Emergency Alerts**: One-tap SOS to notify security with location, plus first-aid tips via Grok.
-- **Academic Planner**: Track courses, deadlines, and exams with smart reminders. Ask Grok, “When’s my next exam?”
+- **Campus Map**: Real time google map integration.
+- **Emergency Alerts**: One tap SOS to notify security.
+- **Academic Planner**: Track courses, deadlines, and exams with smart reminders. Ask CiveGpt, “When’s my next exam?”
 - **Mental Health Hub**: Access UDOM counselors, self-help resources, and Grok advice for stress management.
-- **Student Chat**: Connect with peers in study groups or mentorship matches. Grok suggests discussion topics.
+- **Student Chat**: Connect with peers in study groups or mentorship matches. Civegpt suggests discussion topics.
 - **Career Corner**: Find internships, build resumes, and learn tech skills with Grok’s guidance.
 
 ## Tech Stack
