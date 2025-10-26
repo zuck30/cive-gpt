@@ -60,7 +60,7 @@ function App() {
       description: "Main library with study spaces, computers, and research materials",
       facilities: ["Study Areas", "Computers", "Research Materials", "Quiet Zones"],
       hours: "8:00 AM - 10:00 PM",
-      contact: "library@cive.udom.ac.tz"
+      contact: "udom.ac.tz"
     },
     academicBlock: {
       name: "Academic Block",
@@ -70,7 +70,7 @@ function App() {
       description: "Academic offices",
       facilities: [ "Faculty Offices" , "Academic Offices"],
       hours: "7:00 AM - 6:00 PM",
-      contact: "academic@cive.udom.ac.tz"
+      contact: "udom.ac.tz"
     },
     adminBlock: {
       name: "Administration Block",
@@ -80,17 +80,17 @@ function App() {
       description: "Administrative offices and student services",
       facilities: ["Dean's Office", "Student Affairs", "Registration", "Finance", "HR" , "Lectures Offices"],
       hours: "8:00 AM - 5:00 PM",
-      contact: "admin@cive.udom.ac.tz"
+      contact: "udom.ac.tz"
     },
     lrb: {
       name: "Learning Resource Building (LRB)",
       location: { lat: -6.2170955, lng: 35.8099612 },
-      address: "CIVE Learning Resources Center",
+      address: "CIVE Learning Resources Building",
       type: "Academic",
-      description: "Digital learning resources and computer labs",
-      facilities: ["Computer Labs", "Digital Library", "E-Learning Studio", "Group Study Rooms"],
-      hours: "7:00 AM - 9:00 PM", 
-      contact: "lrb@cive.udom.ac.tz"
+      description: "Learning resources and Lecture Halls",
+      facilities: ["Ethernet Connectivity", "Group Study Rooms"],
+      hours: "24/7", 
+      contact: "udom.ac.tz"
     },
     labs: {
       name: "Computer Labs Complex",
