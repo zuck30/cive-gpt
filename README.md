@@ -6,7 +6,7 @@
 CiveGpt is a web app for CIVE and UDOM students, delivering life-saving tools for navigation, safety, academics, mental health, and career prep.
 </p>
 
-![React](https://img.shields.io/badge/React-18.2.0-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.68.0-green) ![Grok API](https://img.shields.io/badge/Grok-API-brightgreen)
+![React](https://img.shields.io/badge/React-18.2.0-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.68.0-green) !
 
 ## Features
 
