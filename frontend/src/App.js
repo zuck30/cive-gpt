@@ -58,8 +58,8 @@ function App() {
       address: "College of Informatics and Virtual Education, UDOM",
       type: "Academic",
       description: "Main library with study spaces, computers, and research materials",
-      facilities: ["Study Areas", "Computers", "Research Materials", "Printing", "Quiet Zones"],
-      hours: "8:00 AM - 8:00 PM",
+      facilities: ["Study Areas", "Computers", "Research Materials", "Quiet Zones"],
+      hours: "8:00 AM - 10:00 PM",
       contact: "library@cive.udom.ac.tz"
     },
     academicBlock: {
