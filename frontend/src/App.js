@@ -63,13 +63,13 @@ function App() {
       contact: "library@cive.udom.ac.tz"
     },
     academicBlock: {
-      name: "Academic Block A",
+      name: "Academic Block",
       location: { lat: -6.2171955, lng: 35.8097612 },
-      address: "Main Academic Building, CIVE",
+      address: "Academic Building Block, CIVE",
       type: "Academic", 
-      description: "Primary lecture halls and classrooms for informatics programs",
-      facilities: ["Lecture Halls", "Classrooms", "Faculty Offices", "Student Lounge"],
-      hours: "7:00 AM - 10:00 PM",
+      description: "Academic offices",
+      facilities: [ "Faculty Offices" , "Academic Offices"],
+      hours: "7:00 AM - 6:00 PM",
       contact: "academic@cive.udom.ac.tz"
     },
     adminBlock: {
@@ -78,7 +78,7 @@ function App() {
       address: "CIVE Administration Building",
       type: "Administrative",
       description: "Administrative offices and student services",
-      facilities: ["Dean's Office", "Student Affairs", "Registration", "Finance", "HR"],
+      facilities: ["Dean's Office", "Student Affairs", "Registration", "Finance", "HR" , "Lectures Offices"],
       hours: "8:00 AM - 5:00 PM",
       contact: "admin@cive.udom.ac.tz"
     },
