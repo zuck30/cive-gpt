@@ -3,6 +3,6 @@ import App from './App';
 
 test('renders welcome message', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Karibu kwa AfyaChecker/i);
+  const linkElement = screen.getByText(/Welcome to CiveGPT/i);
   expect(linkElement).toBeInTheDocument();
 });
