@@ -1,26 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  FiSend, FiUser, FiGlobe, FiX, FiCopy, FiCheck,
-  FiMessageSquare, FiSearch, FiStar, FiShare2, FiRotateCcw,
-  FiAlertTriangle, FiPlus, FiChevronRight, FiChevronLeft, FiMic, FiSpeaker, FiUpload, FiFile, FiClock, FiThumbsUp, FiRotateCw,
-  FiMenu, FiHeart, FiAlertCircle, FiBook, FiBookmark, FiAward, FiMap, FiHome, FiBriefcase, FiUsers, FiCompass, FiMapPin, FiDownload,
-  FiBookOpen, FiCalendar, FiBarChart2, FiLayers, FiTarget, FiTool,
+  FiSend, FiUser, FiGlobe, FiX, FiCopy,
+  FiMessageSquare, FiSearch, FiMap, FiHome, FiUsers, FiMapPin, FiDownload,
+  FiBookOpen, FiCalendar, FiBarChart2, FiLayers, FiTarget,
   FiPenTool,
   FiDatabase,
-  FiPaperclip
+  FiPaperclip,
+  FiMonitor
 } from 'react-icons/fi';
 import { 
   MdEmergency,
-  MdLocationOn,
-  MdSchool,
-  MdWork,
   MdExplore,
-  MdBusinessCenter,
-  MdLibraryBooks,
-  MdRefresh,
-  MdPerson,
-  MdGroup,
-  MdBuild,
   MdLocalLibrary
 } from 'react-icons/md';
 import './App.css';
@@ -297,21 +287,21 @@ function App() {
         title: "Blog & News",
         description: " Latest university news and articles",
         link: "https://portal.udom.ac.tz/blog/index",
-        icon: FiBlog
+        icon: FiMonitor
       },
 
           {
         title: "UDOM IR Repository",
-        description: "Open Access repository storing books, book chapters, conference proceedings, doctoral theses, journal articles, master's dissertations, policies, and reports from University of Dodoma students and staff.",
+        description: "Open Access repository and reports from UDOM students and staff.",
         link: "https://repository.udom.ac.tz/home",
         icon: FiDatabase
       },
 
     {
         title: "e-Mrejesho System",
-        description: "Mfumo wa kuripoti na kufuatilia malalamiko mbalimbali yanayohusu utoaji wa huduma za umma katika taasisi za umma na binafsi nchini Tanzania.",
+        description: "Mfumo wa kuripoti na kufuatilia malalamiko mbalimbali.",
         link: " https://emrejesho.gov.go.tz",
-        icon: FiPaperclip
+        icon: FiGlobe
       }
 
     ],
@@ -969,7 +959,7 @@ function App() {
                     <FiCalendar className="text-sm" />
                     <span>{language === 'English' ? 'Timetable Portal' : 'Tovuti ya Ratiba'}</span>
                   </a>
-                  <a href="https://library.udom.ac.tz" target="_blank" rel="noopener noreferrer" className="block text-orange-500 hover:text-orange-400 text-sm py-2 transition-all duration-200 flex items-center space-x-2">
+                  <a href="https://catalog.udom.ac.tz" target="_blank" rel="noopener noreferrer" className="block text-orange-500 hover:text-orange-400 text-sm py-2 transition-all duration-200 flex items-center space-x-2">
                     <FiBookOpen className="text-sm" />
                     <span>{language === 'English' ? 'Online Library' : 'Maktaba Mtandaoni'}</span>
                   </a>
