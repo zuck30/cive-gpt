@@ -159,7 +159,7 @@ function App() {
       title: { en: 'Emergency', sw: 'Dharura' },
       description: { en: 'Campus security & emergency contacts', sw: 'Usalama wa kampasi na mawasiliano ya dharura' },
       color: 'text-red-500',
-      action: () => window.open('tel:0755123456')
+      action: () => window.open('tel: 0673 538 606')
     },
     {
       icon: MdExplore,
