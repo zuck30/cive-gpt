@@ -110,27 +110,27 @@ function App() {
       description: "Food court and student social gathering space",
       facilities: ["Food Counters", "Dining Area", "Outdoor Seating", "Snack Bar", "WiFi Zone"],
       hours: "6:30 AM - 8:00 PM",
-      contact: "cafeteria@cive.udom.ac.tz"
+      contact: "udom.ac.tz"
     },
     auditorium: {
       name: "Main Auditorium",
       location: { lat: -6.2175955, lng: 35.8098612 },
       address: "CIVE Conference and Events Center",
       type: "Academic",
-      description: "Large auditorium for conferences, seminars and events",
-      facilities: ["500+ Capacity", "Audio-Visual Equipment", "Stage", "Conference Rooms"],
+      description: "Large auditorium for lectures, conferences, seminars and events",
+      facilities: ["600+ Capacity", "Audio-Visual Equipment", "Stage", "Conference Rooms"],
       hours: "As Scheduled",
-      contact: "events@cive.udom.ac.tz"
+      contact: "udom.ac.tz"
     },
     workshop: {
       name: "Technical Workshop",
       location: { lat: -6.2176955, lng: 35.8090612 },
       address: "CIVE Technical and Practical Labs",
       type: "Academic",
-      description: "Hands-on technical training and workshop area",
+      description: "Hands on technical training and workshop area",
       facilities: ["Hardware Lab", "Repair Station", "Prototyping Area", "Tools"],
       hours: "8:00 AM - 6:00 PM",
-      contact: "workshop@cive.udom.ac.tz"
+      contact: "udom.ac.tz"
     },
     researchCenter: {
       name: "Research Center",
@@ -140,17 +140,7 @@ function App() {
       description: "Advanced research facilities and innovation labs",
       facilities: ["Research Labs", "Innovation Hub", "Meeting Rooms", "Presentation Area"],
       hours: "8:00 AM - 8:00 PM",
-      contact: "research@cive.udom.ac.tz"
-    },
-    studentCenter: {
-      name: "Student Center",
-      location: { lat: -6.2168955, lng: 35.8096612 },
-      address: "CIVE Student Activities Building",
-      type: "Student Services",
-      description: "Student organizations, clubs, and activities center",
-      facilities: ["Club Offices", "Meeting Rooms", "Recreation Area", "Student Council"],
-      hours: "8:00 AM - 9:00 PM",
-      contact: "students@cive.udom.ac.tz"
+      contact: "udom.ac.tz"
     }
   };
 
