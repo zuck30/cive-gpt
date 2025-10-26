@@ -5,7 +5,8 @@ import {
   FiAlertTriangle, FiPlus, FiChevronRight, FiChevronLeft, FiMic, FiSpeaker, FiUpload, FiFile, FiClock, FiThumbsUp, FiRotateCw,
   FiMenu, FiHeart, FiAlertCircle, FiBook, FiBookmark, FiAward, FiMap, FiHome, FiBriefcase, FiUsers, FiCompass, FiMapPin, FiDownload,
   FiBookOpen, FiCalendar, FiBarChart2, FiLayers, FiTarget, FiTool,
-  FiPenTool
+  FiPenTool,
+  FiDatabase
 } from 'react-icons/fi';
 import { 
   MdEmergency,
@@ -296,6 +297,13 @@ function App() {
         description: " Latest university news and articles",
         link: "https://portal.udom.ac.tz/blog/index",
         icon: FiBlog
+      },
+
+          {
+        title: "UDOM IR Repository",
+        description: "Open Access repository storing books, book chapters, conference proceedings, doctoral theses, journal articles, master's dissertations, policies, and reports from University of Dodoma students and staff.",
+        link: "https://repository.udom.ac.tz/home",
+        icon: FiDatabase
       }
     ],
 
