@@ -3,7 +3,7 @@
 ![Banner](https://capsule-render.vercel.app/api?type=venom&height=200&color=0:43cea2,100:185a9d&text=%20CiveGpt&textBg=false&desc=Your%20UDOM%20Lifeline&descAlign=79&fontAlign=50&descAlignY=70&fontColor=f7f5f5)
 
 <p align="center">
-CiveGpt is a web/mobile app for CIVE and UDOM students, delivering life-saving tools for navigation, safety, academics, mental health, and career prep.
+CiveGpt is a web app for CIVE and UDOM students, delivering life-saving tools for navigation, safety, academics, mental health, and career prep.
 </p>
 
 ![React](https://img.shields.io/badge/React-18.2.0-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.68.0-green) ![Grok API](https://img.shields.io/badge/Grok-API-brightgreen)
