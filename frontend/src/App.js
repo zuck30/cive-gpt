@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   FiSend, FiUser, FiGlobe, FiX, FiCopy,
   FiMessageSquare, FiSearch, FiMap, FiHome, FiUsers, FiMapPin, FiDownload,
   FiBookOpen, FiCalendar, FiBarChart2, FiLayers, FiTarget,
   FiPenTool,
   FiDatabase,
-  FiPaperclip,
   FiMonitor
 } from 'react-icons/fi';
 import { 
@@ -16,14 +15,6 @@ import {
 import './App.css';
 import Logo from './images/logo.png';
 
-// UDOM API endpoints
-const UDOM_API = {
-  base: 'https://www.udom.ac.tz',
-  ratiba: 'https://ratiba.udom.ac.tz/api',
-  news: 'https://www.udom.ac.tz/api/news',
-  courses: 'https://www.udom.ac.tz/api/courses'
-};
-
 function App() {
   // Core state
   const [activeTab, setActiveTab] = useState('home');
@@ -31,15 +22,12 @@ function App() {
   const [language, setLanguage] = useState('English');
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedBuilding, setSelectedBuilding] = useState('library');
   const [userLocation, setUserLocation] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [academicData, setAcademicData] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  const chatEndRef = useRef(null);
   const textareaRef = useRef(null);
   const chatContainerRef = useRef(null);
 
@@ -202,12 +190,25 @@ function App() {
     }
   }, [activeTab]);
 
+  // Fetch academic data from UDOM APIs
+  const fetchAcademicData = useCallback(async () => {
+    try {
+      // Simulate API calls - replace with actual UDOM API endpoints
+      const response = await fetch('/api/academic-data');
+      const data = await response.json();
+      setAcademicData(data);
+    } catch (error) {
+      console.log('Failed to fetch academic data, using fallback');
+      setAcademicData(getFallbackAcademicData());
+    }
+  }, []);
+
   // Load academic data
   useEffect(() => {
     if (activeTab === 'academics' && !academicData) {
       fetchAcademicData();
     }
-  }, [activeTab, academicData]);
+  }, [activeTab, academicData, fetchAcademicData]);
 
   // Initialize map
   useEffect(() => {
@@ -222,19 +223,6 @@ function App() {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatHistory, loading]);
-
-  // Fetch academic data from UDOM APIs
-  const fetchAcademicData = async () => {
-    try {
-      // Simulate API calls - replace with actual UDOM API endpoints
-      const response = await fetch('/api/academic-data');
-      const data = await response.json();
-      setAcademicData(data);
-    } catch (error) {
-      console.log('Failed to fetch academic data, using fallback');
-      setAcademicData(getFallbackAcademicData());
-    }
-  };
 
   // Fallback academic data
   const getFallbackAcademicData = () => ({
