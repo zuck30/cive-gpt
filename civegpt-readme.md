@@ -47,10 +47,10 @@
 
 ## Usage
 1. Open `http://localhost:3000`.
-2. Navigate campus, manage academics, access support, or chat with Grok (e.g., “How do I cope with stress?”).
+2. Navigate campus, manage academics, access support, or chat with CiveGpt (e.g., “How do I cope with stress?”).
 
 ## Roadmap
-- MVP: Map, alerts, planner, Grok chat.
+- MVP: Map, alerts, planner, chat.
 - Add mental health and chat features.
 - Include career tools and feedback system.
 - Beta test and launch.
