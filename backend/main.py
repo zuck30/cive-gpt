@@ -516,7 +516,7 @@ async def get_academic_resources(language: str = "English"):
 @app.get("/")
 async def root():
     return {
-        "message": "Welcome to CiveGpt API - UDOM Campus AI Assistant",
+        "message": "Welcome to CiveGpt API, College Of Informatics & Virtual Education Artificial Intelligence Assistant",
         "version": "2.0.0",
         "status": "operational",
         "features": [
@@ -550,7 +550,7 @@ async def health():
     return {
         "status": status,
         "response_time": round(response_time, 2),
-        "service": "CiveGpt UDOM Assistant",
+        "service": "CiveGpt College Assistant",
         "model": "llama-3.3-70b-versatile"
     }
 
