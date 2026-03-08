@@ -6,17 +6,14 @@ import time
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List, Dict
 import logging
-import json
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="CiveGpt API", version="2.0.0", description="UDOM Campus AI Assistant")
+app = FastAPI(title="CiveGPT API", version="3.0.0", description="General-purpose AI assistant with UDOM expertise")
 
-# CORS setup for frontend
 origins = [
-    "https://civegpt.netlify.app",  
+    "https://civegpt.netlify.app",
     "http://localhost:3000",
     "http://localhost:3001",
     "*"
@@ -30,10 +27,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure Groq API client
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-# UDOM Campus Data
 UDOM_CAMPUSES = {
     "main": {
         "name": "Main Campus",
@@ -43,7 +38,7 @@ UDOM_CAMPUSES = {
         "facilities": ["Library", "Admin Block", "Lecture Halls", "Hostels", "Cafeteria", "Sports Complex"]
     },
     "health": {
-        "name": "Health Sciences Campus", 
+        "name": "Health Sciences Campus",
         "location": {"lat": -6.160083, "lng": 35.749667},
         "address": "Mlimwa, Dodoma",
         "departments": ["Medicine", "Nursing", "Pharmacy", "Dentistry", "Public Health"],
@@ -58,7 +53,6 @@ UDOM_CAMPUSES = {
     }
 }
 
-# Emergency contacts and important numbers
 EMERGENCY_CONTACTS = {
     "en": {
         "campus_security": "0755123456",
@@ -93,313 +87,136 @@ class CampusInfoRequest(BaseModel):
     campus_id: str
     language: str = "English"
 
-def detect_query_type(message: str, language: str) -> Dict:
-    """Detect the type of query to provide better responses."""
-    message_lower = message.lower()
-    
-    query_types = {
-        "navigation": {
-            "en": ["where is", "how to get to", "location of", "directions to", "find", "locate"],
-            "sw": ["iko wapi", "nafika vipi", "mahali pa", "uelekeo wa", "tafuta", "patia"]
-        },
-        "academics": {
-            "en": ["timetable", "exam", "course", "lecture", "professor", "assignment", "deadline"],
-            "sw": ["ratiba", "mtihani", "kozi", "mhadhara", "profesa", "kazi", "muda"]
-        },
-        "emergency": {
-            "en": ["emergency", "help", "urgent", "security", "danger", "accident"],
-            "sw": ["dharura", "msaada", "haraka", "usalama", "hatari", "ajali"]
-        },
-        "career": {
-            "en": ["job", "career", "internship", "employment", "cv", "resume", "interview"],
-            "sw": ["kazi", "ajira", "internship", "kuajiriwa", "cv", "wasifu", "mahojiano"]
-        },
-        "facilities": {
-            "en": ["library", "hostel", "cafeteria", "lab", "sports", "gym", "medical"],
-            "sw": ["maktaba", "hosteli", "mikahawa", "maabara", "michezo", "ukumbi", "kliniki"]
-        }
-    }
-    
-    detected_types = []
-    for query_type, keywords in query_types.items():
-        lang_key = "sw" if language == "Swahili" else "en"
-        if any(keyword in message_lower for keyword in keywords[lang_key]):
-            detected_types.append(query_type)
-    
-    return {
-        "types": detected_types,
-        "is_emergency": "emergency" in detected_types
-    }
+def is_udom_query(message: str) -> bool:
+    udom_keywords = [
+        "udom", "campus", "lecture", "professor", "hostel", "library",
+        "dodoma university", "faculty of", "department of", "student affairs",
+        "registration", "timetable", "exam", "course", "academic calendar",
+        "cive", "college of informatics", "virtual education"
+    ]
+    return any(kw in message.lower() for kw in udom_keywords)
 
-def get_system_prompt(language: str, query_types: List[str]) -> str:
-    """Get appropriate system prompt based on language and query type."""
-    
-    base_prompt_sw = """Wewe ni CiveGPT, msaidizi wa AKILI wa kampasi ya Chuo Kikuu cha Dodoma (UDOM). 
-Jukumu lako ni kusaidia wanafunzi na wafanyikazi wa UDOM kwa:
+def detect_emergency(message: str, language: str) -> bool:
+    emergency_keywords_en = ["emergency", "help", "urgent", "security", "danger", "accident", "fire", "medical"]
+    emergency_keywords_sw = ["dharura", "msaada", "haraka", "usalama", "hatari", "ajali", "moto", "afya"]
+    keywords = emergency_keywords_sw if language == "Swahili" else emergency_keywords_en
+    return any(kw in message.lower() for kw in keywords)
 
-1. Uelekezo wa kampasi na ramani
-2. Masuala ya masomo na kimasomo
-3. Mwongozo wa kazi na taaluma
-4. Huduma za kampasi na rasilimali
-5. Usalama na mawasiliano ya dharura
-
-MIONGOZO MUHIMU:
-- Toa taarifa sahihi za UDOM pekee
-- Kwa maswali magumu, pendekeza kuwasiliana na ofisi husika
-- Kwa dharura, toa namba za mawasiliano haraka
-- Rejelea rasilimali halisi za UDOM (tovuti, ratiba, nk)
-- Waonye watumiaji kuhakikisha taarifa kwenye chanzo rasmi
-
-Jibu kwa lugha ya Kiswahili yenye heshima na ushirikiano."""
-
-    base_prompt_en = """You are CiveGPT, the AI assistant for University of Dodoma (UDOM) campus.
-Your role is to assist UDOM students and staff with:
-
-1. Campus navigation and maps
-2. Academic and educational matters
-3. Career and professional guidance
-4. Campus services and resources
-5. Safety and emergency communications
-
-CRITICAL GUIDELINES:
-- Provide accurate UDOM-specific information only
-- For complex queries, recommend contacting relevant offices
-- For emergencies, provide immediate contact numbers
-- Reference actual UDOM resources (website, timetable, etc.)
-- Advise users to verify information with official sources
-
-Respond in respectful and collaborative English."""
-
-    # Add context based on detected query types
-    context_additions_sw = {
-        "navigation": "Kikokotoo cha uelekezo wa kampasi. Toa maelekezo sahihi ya maeneo kwenye kampasi.",
-        "academics": "Mtaalamu wa masomo. Rejelea rasilimali za kimasomo na ratiba za UDOM.",
-        "emergency": "Mfumo wa usaidizi wa dharura. Toa namba za mawasiliano haraka na ushauri wa usalama.",
-        "career": "Mshauri wa kazi. Wasiliana na ofisi ya ajira na rasilimali za taaluma.",
-        "facilities": "Mtaalamu wa rasilimali za kampasi. Elezea huduma zinazopatikana."
-    }
-    
-    context_additions_en = {
-        "navigation": "Campus navigation expert. Provide accurate directions to campus locations.",
-        "academics": "Academic specialist. Reference UDOM academic resources and timetables.",
-        "emergency": "Emergency support system. Provide immediate contact numbers and safety advice.",
-        "career": "Career advisor. Connect with employment office and professional resources.",
-        "facilities": "Campus facilities expert. Describe available services and resources."
-    }
-    
-    base_prompt = base_prompt_sw if language == "Swahili" else base_prompt_en
-    context_additions = context_additions_sw if language == "Swahili" else context_additions_en
-    
-    additional_context = ""
-    for query_type in query_types:
-        if query_type in context_additions:
-            additional_context += f"\n{context_additions[query_type]}"
-    
-    return base_prompt + additional_context
-
-def get_user_prompt(message: str, language: str, query_types: List[str], is_emergency: bool) -> str:
-    """Construct optimized user prompt for campus-related queries."""
-    
+def get_general_system_prompt(language: str) -> str:
     if language == "Swahili":
-        emergency_note = "**DHARURA:** Hii ni swali la dharura. " if is_emergency else ""
-        
-        return f"""{emergency_note}Swali la mwanafunzi wa UDOM:
-
-"{message}"
-
-Tafadhali toa:
-- Jibu la moja kwa moja linalohusika na UDOM
-- Maelekezo ya vitendo (kama inafaa)
-- Rasilimali husika za UDOM (tovuti, namba, nk)
-- Ushauri wa ziada unaohitajika
-
-Jibu kwa Kiswahili kwa muundo wazi na rahisi kusoma."""
+        return (
+            "Wewe ni CiveGPT, msaidizi wa AI wa jumla kutoka Chuo cha Informatics na Elimu Mtandaoni (CIVE) "
+            "cha Chuo Kikuu cha Dodoma. Unaweza kujibu maswali ya kawaida, kusaidia kuandika, kufanya hesabu, "
+            "kutoa maelezo, na kutoa ushauri wa kazi. Pia una ujuzi maalum kuhusu UDOM, na utautumia pale "
+            "mtumiaji anapouliza kuhusu UDOM.\n\n"
+            "Mwongozo:\n"
+            "- Kuwa msaada, sahihi, na rafiki.\n"
+            "- Kwa maswali ya jumla (k.v. 'mji mkuu wa Ufaransa ni upi?', 'ninaandikaje CV?'), jibu moja kwa moja.\n"
+            "- Kwa maswali yanayohusu UDOM (k.v. 'maktaba iko wapi?'), toa taarifa sahihi za UDOM.\n"
+            "- Usilazimishe kutaja UDOM kwenye kila jibu; tumia tu inapofaa."
+        )
     else:
-        emergency_note = "**EMERGENCY:** This is an urgent query. " if is_emergency else ""
-        
-        return f"""{emergency_note}UDOM student query:
+        return (
+            "You are CiveGPT, a general-purpose AI assistant from the College of Informatics and Virtual Education (CIVE) "
+            "at the University of Dodoma. You can answer everyday questions, help with writing, perform calculations, "
+            "provide explanations, and offer career advice. You also have specialised knowledge about UDOM, and you will "
+            "use it when the user asks UDOM-related questions.\n\n"
+            "Guidelines:\n"
+            "- Be helpful, accurate, and friendly.\n"
+            "- For general queries (e.g., 'what is the capital of France?', 'how do I write a CV?'), answer directly.\n"
+            "- For UDOM-specific queries (e.g., 'where is the library?'), provide accurate UDOM information.\n"
+            "- Do not force UDOM references into every response; only use them when relevant."
+        )
 
-"{message}"
+def get_udom_system_prompt(language: str, is_emergency: bool = False) -> str:
+    base_sw = (
+        "Wewe ni CiveGPT, msaidizi wa AI wa Chuo cha Informatics na Elimu Mtandaoni (CIVE) cha Chuo Kikuu cha Dodoma. "
+        "Una ujuzi maalum kuhusu kampasi za UDOM, rasilimali za masomo, nambari za dharura, na huduma za wanafunzi. "
+        "Jibu kwa usahihi na kwa undani kuhusu UDOM."
+    )
+    base_en = (
+        "You are CiveGPT, an AI assistant from the College of Informatics and Virtual Education (CIVE) at the University of Dodoma. "
+        "You have specialised knowledge about UDOM campuses, academic resources, emergency contacts, and student services. "
+        "Answer accurately and in detail about UDOM."
+    )
+    if is_emergency:
+        if language == "Swahili":
+            base_sw += " Hili ni swali la dharura. Toa nambari za mawasiliano za dharura mara moja na ushauri wa usalama."
+        else:
+            base_en += " This is an emergency query. Provide emergency contact numbers immediately and safety advice."
+    return base_sw if language == "Swahili" else base_en
 
-Please provide:
-- Direct UDOM-specific response
-- Actionable guidance (if applicable)
-- Relevant UDOM resources (websites, numbers, etc.)
-- Any additional needed advice
+def get_suggestions(language: str, is_udom: bool = False) -> List[str]:
+    if is_udom:
+        if language == "Swahili":
+            return [
+                "Nionyeshe ramani ya kampasi",
+                "Nambari za dharura za UDOM",
+                "Ratiba ya mitihani",
+                "Maktaba iko wapi?"
+            ]
+        else:
+            return [
+                "Show me the campus map",
+                "UDOM emergency contacts",
+                "Exam timetable",
+                "Where is the library?"
+            ]
+    else:
+        if language == "Swahili":
+            return [
+                "Nisaidie kuandika barua pepe",
+                "Eleza nguvu ya mvuto",
+                "Ninaandikaje CV?",
+                "Habari za leo"
+            ]
+        else:
+            return [
+                "Help me write an email",
+                "Explain gravity",
+                "How to write a CV",
+                "Today's news"
+            ]
 
-Respond in clear, easy-to-read format in {language}."""
-
-def get_suggestions(query_types: List[str], language: str) -> List[str]:
-    """Get relevant follow-up suggestions based on query type."""
-    
-    suggestions_en = {
-        "navigation": [
-            "Show me the campus map",
-            "How do I get to the library?",
-            "Where is the nearest cafeteria?",
-            "Directions to lecture halls"
-        ],
-        "academics": [
-            "Download timetable",
-            "Exam schedule",
-            "Course registration help",
-            "Academic calendar dates"
-        ],
-        "emergency": [
-            "Campus security number",
-            "Medical emergency contacts",
-            "Student affairs office",
-            "Emergency procedures"
-        ],
-        "career": [
-            "Internship opportunities",
-            "Career counseling",
-            "Job application help",
-            "Resume building"
-        ],
-        "facilities": [
-            "Library hours",
-            "Hostel information",
-            "Sports facilities",
-            "Medical services"
+def get_resources(language: str) -> List[Dict]:
+    if language == "Swahili":
+        return [
+            {"name": "Tovuti ya UDOM", "url": "https://www.udom.ac.tz", "type": "website"},
+            {"name": "Maktaba Mtandaoni", "url": "https://library.udom.ac.tz", "type": "library"},
+            {"name": "Tovuti ya Mwanafunzi", "url": "https://portal.udom.ac.tz", "type": "portal"}
         ]
-    }
-    
-    suggestions_sw = {
-        "navigation": [
-            "Nionyeshe ramani ya kampasi",
-            "Nawezaje kufika maktabani?",
-            "Mkahawa wa karibu uko wapi?",
-            "Maelekezo kwenye vyumba vya mihadhara"
-        ],
-        "academics": [
-            "Pakua ratiba",
-            "Ratiba ya mitihani",
-            "Usaidizi wa usajili wa kozi",
-            "Tarehe za kalenda ya masomo"
-        ],
-        "emergency": [
-            "Namba ya usalama wa kampasi",
-            "Mawasiliano ya dharura ya kiafya",
-            "Ofisi ya masuala ya wanafunzi",
-            "Taratibu za dharura"
-        ],
-        "career": [
-            "Fursa za internship",
-            "Usaidizi wa mwongozo wa kazi",
-            "Usaidizi wa maombi ya kazi",
-            "Kutengeneza wasifu"
-        ],
-        "facilities": [
-            "Muda wa kufungua maktaba",
-            "Taarifa za hosteli",
-            "Vifaa vya michezo",
-            "Huduma za kiafya"
-        ]
-    }
-    
-    suggestions = suggestions_sw if language == "Swahili" else suggestions_en
-    result = []
-    
-    for query_type in query_types:
-        if query_type in suggestions:
-            result.extend(suggestions[query_type][:2])  # Get top 2 suggestions per type
-    
-    return list(set(result))[:4]  # Return unique suggestions, max 4
-
-def get_resources(query_types: List[str], language: str) -> List[Dict]:
-    """Get relevant UDOM resources based on query type."""
-    
-    resources_en = {
-        "navigation": [
-            {"name": "Campus Map", "url": "https://www.udom.ac.tz/campus-map", "type": "map"},
-            {"name": "Virtual Tour", "url": "https://www.udom.ac.tz/virtual-tour", "type": "tour"}
-        ],
-        "academics": [
-            {"name": "Timetable Portal", "url": "https://ratiba.udom.ac.tz", "type": "academic"},
+    else:
+        return [
+            {"name": "UDOM Website", "url": "https://www.udom.ac.tz", "type": "website"},
             {"name": "Online Library", "url": "https://library.udom.ac.tz", "type": "library"},
             {"name": "Student Portal", "url": "https://portal.udom.ac.tz", "type": "portal"}
-        ],
-        "emergency": [
-            {"name": "Security Office", "url": "tel:0755123456", "type": "contact"},
-            {"name": "Medical Center", "url": "tel:112", "type": "contact"}
-        ],
-        "career": [
-            {"name": "Career Office", "url": "https://www.udom.ac.tz/career", "type": "career"},
-            {"name": "Internship Portal", "url": "https://www.udom.ac.tz/internships", "type": "opportunities"}
-        ],
-        "facilities": [
-            {"name": "Facilities Guide", "url": "https://www.udom.ac.tz/facilities", "type": "guide"},
-            {"name": "Hostel Booking", "url": "https://www.udom.ac.tz/hostels", "type": "booking"}
         ]
-    }
-    
-    resources_sw = {
-        "navigation": [
-            {"name": "Ramani ya Kampasi", "url": "https://www.udom.ac.tz/campus-map", "type": "ramani"},
-            {"name": "Ziara Mtandaoni", "url": "https://www.udom.ac.tz/virtual-tour", "type": "ziara"}
-        ],
-        "academics": [
-            {"name": "Tovuti ya Ratiba", "url": "https://ratiba.udom.ac.tz", "type": "masomo"},
-            {"name": "Maktaba Mtandaoni", "url": "https://library.udom.ac.tz", "type": "maktaba"},
-            {"name": "Tovuti ya Mwanafunzi", "url": "https://portal.udom.ac.tz", "type": "tovuti"}
-        ],
-        "emergency": [
-            {"name": "Ofisi ya Usalama", "url": "tel:0755123456", "type": "mawasiliano"},
-            {"name": "Kituo cha Afya", "url": "tel:112", "type": "mawasiliano"}
-        ],
-        "career": [
-            {"name": "Ofisi ya Kazi", "url": "https://www.udom.ac.tz/career", "type": "kazi"},
-            {"name": "Tovuti ya Internship", "url": "https://www.udom.ac.tz/internships", "type": "fursa"}
-        ],
-        "facilities": [
-            {"name": "Mwongozo wa Vifaa", "url": "https://www.udom.ac.tz/facilities", "type": "mwongozo"},
-            {"name": "Kubokea Hosteli", "url": "https://www.udom.ac.tz/hostels", "type": "ukodishaji"}
-        ]
-    }
-    
-    resources = resources_sw if language == "Swahili" else resources_en
-    result = []
-    
-    for query_type in query_types:
-        if query_type in resources:
-            result.extend(resources[query_type])
-    
-    return result
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat_with_civegpt(request: ChatRequest):
     start_time = time.time()
-    
     try:
-        # Validate input
         if not request.message.strip():
             error_msg = "Tafadhali andika ujumbe." if request.language == "Swahili" else "Please provide a message."
             raise HTTPException(status_code=400, detail=error_msg)
 
-        # Detect query type for better context
-        query_info = detect_query_type(request.message, request.language)
-        query_types = query_info["types"]
-        is_emergency = query_info["is_emergency"]
+        udom_related = is_udom_query(request.message)
+        emergency = detect_emergency(request.message, request.language) if udom_related else False
 
-        logger.info(f"Processing chat request - Language: {request.language}, Types: {query_types}, Emergency: {is_emergency}")
+        logger.info(f"Chat request - Lang: {request.language}, UDOM: {udom_related}, Emergency: {emergency}")
 
-        # Get optimized prompts
-        system_prompt = get_system_prompt(request.language, query_types)
-        user_prompt = get_user_prompt(request.message, request.language, query_types, is_emergency)
+        if udom_related:
+            system_prompt = get_udom_system_prompt(request.language, emergency)
+            user_prompt = f"UDOM student query: {request.message}" if request.language == "English" else f"Swali la mwanafunzi wa UDOM: {request.message}"
+        else:
+            system_prompt = get_general_system_prompt(request.language)
+            user_prompt = request.message
 
-        # Generate response with Groq
         chat_completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {
-                    "role": "system", 
-                    "content": system_prompt
-                },
-                {
-                    "role": "user", 
-                    "content": user_prompt
-                }
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
             ],
             max_tokens=500,
             temperature=0.7,
@@ -409,9 +226,8 @@ async def chat_with_civegpt(request: ChatRequest):
         )
 
         response_text = chat_completion.choices[0].message.content.strip()
-        
-        # Add emergency contacts if emergency detected
-        if is_emergency:
+
+        if udom_related and emergency:
             contacts = EMERGENCY_CONTACTS["sw" if request.language == "Swahili" else "en"]
             emergency_info = "\n\n🚨 **" + ("Nambari za Dharura:" if request.language == "Swahili" else "Emergency Contacts:") + "**\n"
             for service, number in contacts.items():
@@ -419,12 +235,9 @@ async def chat_with_civegpt(request: ChatRequest):
             response_text += emergency_info
 
         response_time = time.time() - start_time
-        
-        # Get suggestions and resources
-        suggestions = get_suggestions(query_types, request.language)
-        resources = get_resources(query_types, request.language)
 
-        logger.info(f"Chat request processed successfully in {response_time:.2f}s")
+        suggestions = get_suggestions(request.language, udom_related)
+        resources = get_resources(request.language) if udom_related else []
 
         return ChatResponse(
             response=response_text,
@@ -439,15 +252,13 @@ async def chat_with_civegpt(request: ChatRequest):
     except Exception as e:
         response_time = time.time() - start_time
         logger.error(f"Error processing chat request: {str(e)}")
-        
         error_msg = (
             "Samahani, kuna hitilafu katika mfumo. Tafadhali jaribu tena."
-            if request.language == "Swahili" 
+            if request.language == "Swahili"
             else "Sorry, there's a system error. Please try again."
         )
-        
         raise HTTPException(
-            status_code=500, 
+            status_code=500,
             detail={
                 "error": error_msg,
                 "response_time": round(response_time, 2)
@@ -456,7 +267,6 @@ async def chat_with_civegpt(request: ChatRequest):
 
 @app.get("/campuses")
 async def get_campuses():
-    """Get all UDOM campuses information."""
     return {
         "campuses": UDOM_CAMPUSES,
         "total_campuses": len(UDOM_CAMPUSES)
@@ -464,24 +274,20 @@ async def get_campuses():
 
 @app.post("/campus/{campus_id}")
 async def get_campus_info(campus_id: str, request: CampusInfoRequest):
-    """Get specific campus information."""
     if campus_id not in UDOM_CAMPUSES:
         error_msg = "Kampasi haijapatikana." if request.language == "Swahili" else "Campus not found."
         raise HTTPException(status_code=404, detail=error_msg)
-    
+
     campus = UDOM_CAMPUSES[campus_id]
-    
-    # Add language-specific descriptions
     if request.language == "Swahili":
         campus["description"] = f"Kampasi kuu ya {campus['name']} ya Chuo Kikuu cha Dodoma."
     else:
         campus["description"] = f"Main {campus['name']} of University of Dodoma."
-    
+
     return campus
 
 @app.get("/emergency-contacts")
 async def get_emergency_contacts(language: str = "English"):
-    """Get emergency contact numbers."""
     contacts = EMERGENCY_CONTACTS["sw" if language == "Swahili" else "en"]
     return {
         "language": language,
@@ -491,7 +297,6 @@ async def get_emergency_contacts(language: str = "English"):
 
 @app.get("/academic-resources")
 async def get_academic_resources(language: str = "English"):
-    """Get UDOM academic resources."""
     resources_en = {
         "timetable": "https://ratiba.udom.ac.tz",
         "library": "https://library.udom.ac.tz",
@@ -499,7 +304,6 @@ async def get_academic_resources(language: str = "English"):
         "online_learning": "https://elearning.udom.ac.tz",
         "academic_calendar": "https://www.udom.ac.tz/academic-calendar"
     }
-    
     resources_sw = {
         "ratiba": "https://ratiba.udom.ac.tz",
         "maktaba": "https://library.udom.ac.tz",
@@ -507,7 +311,6 @@ async def get_academic_resources(language: str = "English"):
         "masomo_mtandaoni": "https://elearning.udom.ac.tz",
         "kalenda_ya_masomo": "https://www.udom.ac.tz/academic-calendar"
     }
-    
     return {
         "language": language,
         "resources": resources_sw if language == "Swahili" else resources_en
@@ -516,41 +319,36 @@ async def get_academic_resources(language: str = "English"):
 @app.get("/")
 async def root():
     return {
-        "message": "Welcome to CiveGpt API, College Of Informatics & Virtual Education Artificial Intelligence Assistant",
-        "version": "2.0.0",
+        "message": "Welcome to CiveGPT – your intelligent assistant from the College of Informatics and Virtual Education. I can help with studies, career, daily tasks, and answer questions about UDOM.",
+        "version": "3.0.0",
         "status": "operational",
         "features": [
-            "Campus navigation assistance",
-            "Academic resources guidance",
-            "Career and internship information",
-            "Emergency contact services",
-            "Multi-language support (English/Swahili)",
-            "UDOM-specific information"
+            "General knowledge and Q&A",
+            "Academic support (explanations, writing help)",
+            "Career guidance (CV, interviews, job search)",
+            "UDOM campus information and resources",
+            "Multi-language support (English/Swahili)"
         ]
     }
 
 @app.get("/health")
 async def health():
     start_time = time.time()
-    
     try:
-        # Quick test query to verify API connectivity
         test_completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[{"role": "user", "content": "Say 'CiveGpt OK' if working."}],
+            messages=[{"role": "user", "content": "Say 'CiveGPT OK' if working."}],
             max_tokens=10,
             temperature=0.1
         )
         status = "healthy"
     except Exception as e:
         status = f"degraded: {str(e)}"
-    
     response_time = time.time() - start_time
-    
     return {
         "status": status,
         "response_time": round(response_time, 2),
-        "service": "CiveGpt College Assistant",
+        "service": "CiveGPT",
         "model": "llama-3.3-70b-versatile"
     }
 
