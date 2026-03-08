@@ -184,7 +184,7 @@ function App() {
   // Fetch academic data from UDOM APIs
   const fetchAcademicData = useCallback(async () => {
     try {
-      // Simulate API calls - replace with actual UDOM API endpoints
+
       const response = await fetch('/api/academic-data');
       const data = await response.json();
       setAcademicData(data);
@@ -208,7 +208,7 @@ function App() {
     }
   }, [activeTab, mapLoaded]);
 
-  // Auto-scroll to bottom of chat - FIXED: Only scrolls chat area
+
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -523,7 +523,7 @@ function App() {
     </div>
   );
 
-  // Render Chat Tab with Twitter-like Design - FIXED SCROLLING
+
   const renderChat = () => (
     <div className="tab-content h-full flex flex-col">
       <div className="chat-header flex justify-between items-center mb-6">
