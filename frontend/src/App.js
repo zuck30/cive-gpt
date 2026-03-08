@@ -532,6 +532,7 @@ function App() {
           <p className="text-gray-400 text-sm">
             {language === 'English' ? 'Your UDOM AI Assistant' : 'Msaidizi wako wa AKILI wa UDOM'}
           </p>
+
         </div>
         <div className="flex space-x-2">
           {chatHistory.length > 0 && (
@@ -576,6 +577,15 @@ function App() {
                 : 'Naweza kukusaidia kuhusu uelekezo wa kampasi, rasilimali za masomo, huduma za wanafunzi, na mengineyo. Ungependa kujua nini?'
               }
             </p>
+
+
+<p className="text-gray-400 max-w-md mx-auto mb-6">
+  {language === 'English' 
+    ? 'Please wait a few seconds for the system to start up on your first visit, once it is up, you can interact instantly. What would you like to know?'
+    : 'Tafadhali subiri sekunde chache mfumo uanze kwa mara ya kwanza, ukishawaka, utaweza kutumia programu papo hapo. Ungependa kujua nini?'
+  }
+</p>
+
             <div className="quick-questions grid grid-cols-1 md:grid-cols-2 gap-3 max-w-lg mx-auto">
               {[
                 language === 'English' ? "Where is the library?" : "Maktaba iko wapi?",
