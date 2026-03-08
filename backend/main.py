@@ -10,7 +10,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="CiveGPT API", version="3.0.0", description="General-purpose AI assistant with UDOM expertise")
+app = FastAPI(title="CiveGPT API", version="3.1.0", description="General-purpose AI assistant with UDOM expertise")
 
 origins = [
     "https://civegpt.netlify.app",
@@ -106,44 +106,51 @@ def get_general_system_prompt(language: str) -> str:
     if language == "Swahili":
         return (
             "Wewe ni CiveGPT, msaidizi wa AI wa jumla kutoka Chuo cha Informatics na Elimu Mtandaoni (CIVE) "
-            "cha Chuo Kikuu cha Dodoma. Unaweza kujibu maswali ya kawaida, kusaidia kuandika, kufanya hesabu, "
-            "kutoa maelezo, na kutoa ushauri wa kazi. Pia una ujuzi maalum kuhusu UDOM, na utautumia pale "
-            "mtumiaji anapouliza kuhusu UDOM.\n\n"
+            "cha Chuo Kikuu cha Dodoma. Kazi yako ni kumsaidia mtumiaji kwa njia ya moja kwa moja, kama ChatGPT. "
+            "Unajibu maswali yoyote kwa ujuzi wako mwenyewe, kutoa maelezo, kutatua matatizo, kuandika, kufanya hesabu, "
+            "na kutoa ushauri. Usimpeleke mtumiaji kwenye rasilimali za nje isipokuwa kama anauliza hasa kuhusu UDOM. "
+            "Hata kama anauliza kitu kinachohusiana na UDOM, jaribu kujibu moja kwa moja kwanza, na uongeze rasilimali za UDOM "
+            "kama nyongeza, si kama jibu kuu.\n\n"
             "Mwongozo:\n"
-            "- Kuwa msaada, sahihi, na rafiki.\n"
-            "- Kwa maswali ya jumla (k.v. 'mji mkuu wa Ufaransa ni upi?', 'ninaandikaje CV?'), jibu moja kwa moja.\n"
-            "- Kwa maswali yanayohusu UDOM (k.v. 'maktaba iko wapi?'), toa taarifa sahihi za UDOM.\n"
-            "- Usilazimishe kutaja UDOM kwenye kila jibu; tumia tu inapofaa."
+            "- Jibu maswali ya jumla kwa undani na usahihi.\n"
+            "- Usitumie alama za ** au formatting yoyote ya markdown. Tumia maandishi wazi tu.\n"
+            "- Ikiwa swali ni kuhusu UDOM, toa taarifa sahihi za UDOM, lakini usimpeleke mtumiaji kwenye ofisi au tovuti "
+            "isipokuwa kama ni muhimu sana (k.m., namba za dharura).\n"
+            "- Kuwa rafiki na msaada."
         )
     else:
         return (
             "You are CiveGPT, a general-purpose AI assistant from the College of Informatics and Virtual Education (CIVE) "
-            "at the University of Dodoma. You can answer everyday questions, help with writing, perform calculations, "
-            "provide explanations, and offer career advice. You also have specialised knowledge about UDOM, and you will "
-            "use it when the user asks UDOM-related questions.\n\n"
+            "at the University of Dodoma. Your job is to help the user directly, like ChatGPT. You answer any questions using "
+            "your own knowledge, provide explanations, solve problems, write, do math, and give advice. Do not redirect the user "
+            "to external resources unless they explicitly ask about UDOM. Even for UDOM-related queries, try to answer directly "
+            "first, and only add UDOM resources as supplementary information, not as the main answer.\n\n"
             "Guidelines:\n"
-            "- Be helpful, accurate, and friendly.\n"
-            "- For general queries (e.g., 'what is the capital of France?', 'how do I write a CV?'), answer directly.\n"
-            "- For UDOM-specific queries (e.g., 'where is the library?'), provide accurate UDOM information.\n"
-            "- Do not force UDOM references into every response; only use them when relevant."
+            "- Answer general questions thoroughly and accurately.\n"
+            "- Do not use ** or any markdown formatting. Use plain text only.\n"
+            "- If the question is about UDOM, provide accurate UDOM information, but do not send the user to offices or websites "
+            "unless absolutely necessary (e.g., emergency numbers).\n"
+            "- Be friendly and helpful."
         )
 
 def get_udom_system_prompt(language: str, is_emergency: bool = False) -> str:
     base_sw = (
         "Wewe ni CiveGPT, msaidizi wa AI wa Chuo cha Informatics na Elimu Mtandaoni (CIVE) cha Chuo Kikuu cha Dodoma. "
         "Una ujuzi maalum kuhusu kampasi za UDOM, rasilimali za masomo, nambari za dharura, na huduma za wanafunzi. "
-        "Jibu kwa usahihi na kwa undani kuhusu UDOM."
+        "Jibu kwa usahihi na kwa undani kuhusu UDOM. Jaribu kujibu moja kwa moja, usimpeleke mtumiaji kwenye ofisi au tovuti "
+        "isipokuwa kama ni lazima kabisa (k.m., kwa masuala ya kusajili au dharura). Tumia maandishi wazi, bila **."
     )
     base_en = (
         "You are CiveGPT, an AI assistant from the College of Informatics and Virtual Education (CIVE) at the University of Dodoma. "
         "You have specialised knowledge about UDOM campuses, academic resources, emergency contacts, and student services. "
-        "Answer accurately and in detail about UDOM."
+        "Answer accurately and in detail about UDOM. Try to answer directly; do not redirect the user to offices or websites "
+        "unless absolutely necessary (e.g., for registration issues or emergencies). Use plain text, no **."
     )
     if is_emergency:
         if language == "Swahili":
-            base_sw += " Hili ni swali la dharura. Toa nambari za mawasiliano za dharura mara moja na ushauri wa usalama."
+            base_sw += " Hili ni swali la dharura. Toa nambari za mawasiliano za dharura mara moja na ushauri wa usalama. Tumia maandishi wazi."
         else:
-            base_en += " This is an emergency query. Provide emergency contact numbers immediately and safety advice."
+            base_en += " This is an emergency query. Provide emergency contact numbers immediately and safety advice. Use plain text."
     return base_sw if language == "Swahili" else base_en
 
 def get_suggestions(language: str, is_udom: bool = False) -> List[str]:
@@ -192,6 +199,9 @@ def get_resources(language: str) -> List[Dict]:
             {"name": "Student Portal", "url": "https://portal.udom.ac.tz", "type": "portal"}
         ]
 
+def strip_markdown_bold(text: str) -> str:
+    return text.replace('**', '')
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat_with_civegpt(request: ChatRequest):
     start_time = time.time()
@@ -229,10 +239,12 @@ async def chat_with_civegpt(request: ChatRequest):
 
         if udom_related and emergency:
             contacts = EMERGENCY_CONTACTS["sw" if request.language == "Swahili" else "en"]
-            emergency_info = "\n\n🚨 **" + ("Nambari za Dharura:" if request.language == "Swahili" else "Emergency Contacts:") + "**\n"
+            emergency_info = "\n\n " + ("Nambari za Dharura:" if request.language == "Swahili" else "Emergency Contacts:") + "\n"
             for service, number in contacts.items():
                 emergency_info += f"- {service}: {number}\n"
             response_text += emergency_info
+
+        response_text = strip_markdown_bold(response_text)
 
         response_time = time.time() - start_time
 
@@ -320,7 +332,7 @@ async def get_academic_resources(language: str = "English"):
 async def root():
     return {
         "message": "Welcome to CiveGPT – your intelligent assistant from the College of Informatics and Virtual Education. I can help with studies, career, daily tasks, and answer questions about UDOM.",
-        "version": "3.0.0",
+        "version": "3.1.0",
         "status": "operational",
         "features": [
             "General knowledge and Q&A",
